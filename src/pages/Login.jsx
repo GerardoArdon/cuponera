@@ -18,12 +18,13 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
     try {
-      // Inicia sesión con Firebase Authentication
       await signInWithEmailAndPassword(auth, form.email, form.password);
-      // Redirige a la página de ofertas
+      // Si el inicio de sesión es exitoso, redirige a la página de ofertas
       navigate("/offers");
     } catch (error) {
+      console.error("Error al iniciar sesión:", error);
       setError(error.message);
     }
   };

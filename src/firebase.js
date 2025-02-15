@@ -3,7 +3,6 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Configuración de Firebase con tus datos
 const firebaseConfig = {
   apiKey: "AIzaSyAmbWYSfhvy0dErxykAABsT_sPg3fzlEk4",
   authDomain: "lacuponera-b9e27.firebaseapp.com",
@@ -14,11 +13,9 @@ const firebaseConfig = {
   measurementId: "G-2MH40DP5DF"
 };
 
-// Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Exporta las instancias para usarlas en el resto de la app
 export { app, analytics, auth, db };

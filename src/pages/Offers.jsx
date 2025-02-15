@@ -1,4 +1,3 @@
-// src/pages/Offers.jsx
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -9,13 +8,12 @@ function Offers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Efecto para obtener las promociones de Firestore
+  // Obtiene las promociones de Firestore
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        // Referencia a la colección "promotions"
         const promotionsRef = collection(db, "promotions");
-        // Consulta: obtener solo las promociones cuyo estado sea "Oferta aprobada"
+        // Solo obtenemos las promociones cuyo estado sea "Oferta aprobada"
         const q = query(promotionsRef, where("estado", "==", "Oferta aprobada"));
         const querySnapshot = await getDocs(q);
 
@@ -41,7 +39,6 @@ function Offers() {
     const auth = getAuth();
     const user = auth.currentUser;
 
-    // Verifica si el usuario está autenticado
     if (!user) {
       alert("Debes iniciar sesión para comprar cupones.");
       // Aquí podrías redirigir al usuario a la página de inicio de sesión
@@ -49,28 +46,26 @@ function Offers() {
     }
 
     // Genera el código del cupón
-    const codigoEmpresa = offer.codigoEmpresa || "DEF"; // Usa "DEF" si no se encuentra el código de la empresa
+    const codigoEmpresa = offer.codigoEmpresa || "DEF"; // Valor por defecto si no existe
     const randomNumber = Math.floor(Math.random() * 9000000) + 1000000; // Número aleatorio de 7 dígitos
     const couponCode = `${codigoEmpresa}${randomNumber}`;
 
     try {
-      // Guarda el cupón en la colección "coupons"
+      // Guarda el cupón en Firestore en la colección "coupons"
       await addDoc(collection(db, "coupons"), {
-        couponCode: couponCode,
-        offerId: offer.id,
-        userId: user.uid,
+        couponCode,          // Código único del cupón
+        offerId: offer.id,   // ID de la promoción comprada
+        userId: user.uid,    // ID del usuario que compra
         purchaseDate: new Date(),
-        status: "disponible", // Estado del cupón, inicialmente disponible
-        // Puedes agregar más campos si es necesario
+        status: "disponible" // Estado inicial del cupón
       });
       alert(`Compra exitosa. Tu cupón es: ${couponCode}`);
     } catch (err) {
-      console.error("Error generando el cupón: ", err);
+      console.error("Error generando el cupón:", err);
       alert("Error al procesar la compra. Inténtalo de nuevo.");
     }
   };
 
-  // Renderizado condicional según el estado de carga o error
   if (loading) {
     return <div className="container mx-auto p-4">Cargando ofertas...</div>;
   }
@@ -79,7 +74,6 @@ function Offers() {
     return <div className="container mx-auto p-4 text-red-500">{error}</div>;
   }
 
-  // Renderiza la lista de ofertas
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Ofertas Activas</h1>
@@ -122,6 +116,7 @@ function Offers() {
 }
 
 export default Offers;
+
 
 
 
