@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"; //PROBANDOOO GH
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
