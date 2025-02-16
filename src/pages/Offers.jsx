@@ -1,4 +1,3 @@
-// src/pages/Offers.jsx
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -17,6 +16,8 @@ function Offers() {
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiration, setCardExpiration] = useState("");
   const [cardCVV, setCardCVV] = useState("");
+  // Nuevo estado para el DUI del comprador
+  const [buyerDUI, setBuyerDUI] = useState("");
   const [paymentLoading, setPaymentLoading] = useState(false);
 
   useEffect(() => {
@@ -43,12 +44,13 @@ function Offers() {
   }, []);
 
   const handleShowPaymentModal = (offer) => {
-    console.log("Se ha seleccionado la oferta para comprar:", offer);
+    console.log("Oferta seleccionada para comprar:", offer);
     setSelectedOffer(offer);
     setQuantity(1);
     setCardNumber("");
     setCardExpiration("");
     setCardCVV("");
+    setBuyerDUI("");
     setShowPaymentModal(true);
   };
 
@@ -58,8 +60,8 @@ function Offers() {
   };
 
   const handleConfirmPayment = async () => {
-    if (!cardNumber || !cardExpiration || !cardCVV) {
-      alert("Por favor, completa los datos de la tarjeta.");
+    if (!cardNumber || !cardExpiration || !cardCVV || !buyerDUI) {
+      alert("Por favor, completa todos los datos de la tarjeta y el DUI.");
       return;
     }
     if (quantity < 1) {
@@ -89,7 +91,10 @@ function Offers() {
             offerId: selectedOffer.id,
             userId: user.uid,
             purchaseDate: new Date(),
-            status: "disponible"
+            status: "disponible",
+            buyerDUI, // se almacena el DUI ingresado
+            promotionTitle: selectedOffer.titulo, // título de la promoción
+            promotionExpiration: selectedOffer.fechaLimite // fecha límite para canjear
           });
         }
         alert(`Pago confirmado. Se ha enviado un correo de confirmación a ${user.email}.`);
@@ -204,6 +209,15 @@ function Offers() {
                 className="w-full p-2 border rounded"
               />
             </div>
+            <div className="mb-2">
+              <label className="block mb-1">DUI:</label>
+              <input
+                type="text"
+                value={buyerDUI}
+                onChange={(e) => setBuyerDUI(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
             <div className="flex justify-end mt-4 space-x-2">
               <button
                 onClick={handleCancelPayment}
@@ -228,3 +242,4 @@ function Offers() {
 }
 
 export default Offers;
+
