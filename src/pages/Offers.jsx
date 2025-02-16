@@ -1,7 +1,9 @@
+// src/pages/Offers.jsx
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 function Offers() {
   const [offers, setOffers] = useState([]);
@@ -17,11 +19,11 @@ function Offers() {
   const [cardCVV, setCardCVV] = useState("");
   const [paymentLoading, setPaymentLoading] = useState(false);
 
-  // Obtener promociones desde Firestore
   useEffect(() => {
     const fetchOffers = async () => {
       try {
         const promotionsRef = collection(db, "promotions");
+        // Solo obtenemos las promociones cuyo estado sea "Oferta aprobada"
         const q = query(promotionsRef, where("estado", "==", "Oferta aprobada"));
         const querySnapshot = await getDocs(q);
         const promotions = [];
@@ -40,8 +42,8 @@ function Offers() {
     fetchOffers();
   }, []);
 
-  // Abre el modal de pago para la oferta seleccionada
   const handleShowPaymentModal = (offer) => {
+    console.log("Se ha seleccionado la oferta para comprar:", offer);
     setSelectedOffer(offer);
     setQuantity(1);
     setCardNumber("");
@@ -50,15 +52,12 @@ function Offers() {
     setShowPaymentModal(true);
   };
 
-  // Cierra el modal de pago
   const handleCancelPayment = () => {
     setShowPaymentModal(false);
     setSelectedOffer(null);
   };
 
-  // Maneja la confirmación del pago
   const handleConfirmPayment = async () => {
-    // Validaciones básicas de los datos de pago
     if (!cardNumber || !cardExpiration || !cardCVV) {
       alert("Por favor, completa los datos de la tarjeta.");
       return;
@@ -69,7 +68,7 @@ function Offers() {
     }
     setPaymentLoading(true);
 
-    // Simular procesamiento del pago (puedes integrar Stripe u otro servicio en producción)
+    // Simulamos el procesamiento del pago
     setTimeout(async () => {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -80,21 +79,19 @@ function Offers() {
         return;
       }
       try {
-        // Generar un documento en la colección "coupons" por cada cupón solicitado
         for (let i = 0; i < quantity; i++) {
           const codigoEmpresa = selectedOffer.codigoEmpresa || "DEF";
           const randomNumber = Math.floor(Math.random() * 9000000) + 1000000; // Número aleatorio de 7 dígitos
           const couponCode = `${codigoEmpresa}${randomNumber}`;
 
           await addDoc(collection(db, "coupons"), {
-            couponCode,          // Código único del cupón
-            offerId: selectedOffer.id, // ID de la promoción
-            userId: user.uid,    // ID del usuario que compra
+            couponCode,
+            offerId: selectedOffer.id,
+            userId: user.uid,
             purchaseDate: new Date(),
-            status: "disponible" // Estado inicial del cupón
+            status: "disponible"
           });
         }
-        // Simula el envío de un correo electrónico al cliente
         alert(`Pago confirmado. Se ha enviado un correo de confirmación a ${user.email}.`);
       } catch (err) {
         console.error("Error generando los cupones:", err);
@@ -103,7 +100,7 @@ function Offers() {
         setPaymentLoading(false);
         setShowPaymentModal(false);
       }
-    }, 2000); // Simula 2 segundos de procesamiento
+    }, 2000);
   };
 
   if (loading) {
@@ -115,6 +112,16 @@ function Offers() {
 
   return (
     <div className="container mx-auto p-4">
+      {/* Botón para ver Mis Cupones */}
+      <div className="flex justify-end mb-4">
+        <Link
+          to="/mycoupons"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+        >
+          Mis Cupones
+        </Link>
+      </div>
+
       <h1 className="text-3xl font-bold mb-4">Ofertas Activas</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {offers.map((offer) => (
@@ -221,7 +228,3 @@ function Offers() {
 }
 
 export default Offers;
-
-
-
-
