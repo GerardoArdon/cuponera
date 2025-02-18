@@ -133,7 +133,7 @@ function Offers() {
           <div key={offer.id} className="bg-white p-4 rounded shadow">
             <h2 className="text-xl font-semibold">{offer.titulo}</h2>
             <p className="text-gray-600">
-              <strong>Categoría:</strong> {offer.rubro}
+              <strong>Rubro:</strong> {offer.rubro}
             </p>
             <p className="mt-2">
               <strong>Precio regular:</strong> ${offer.precioRegular}
