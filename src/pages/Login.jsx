@@ -31,7 +31,16 @@ function Login() {
       navigate("/offers");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      setError(error.message);
+      // Si el error es por credenciales incorrectas, mostramos un mensaje personalizado.
+      if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/invalid-credential"
+      ) {
+        setError("El correo o la contraseña son incorrectos");
+      } else {
+        setError(error.message);
+      }
     }
   };
 
