@@ -1,4 +1,4 @@
-// src/pages/MyCoupons.jsx
+//pagina de Mis Cpones (los que tiene el usuario)
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
@@ -6,10 +6,12 @@ import { getAuth } from "firebase/auth";
 import { jsPDF } from "jspdf";
 import { Link } from "react-router-dom";
 
+
 function MyCoupons() {
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const fetchCoupons = async () => {
@@ -21,7 +23,9 @@ function MyCoupons() {
           setLoading(false);
           return;
         }
-        // Consulta a la colección "coupons" filtrando por userId
+
+
+        //Aqui consulta a la colección "coupons" de firebase filtrando por userId (para mostrar solo los cupones de ese usuario en especifico)
         const couponsRef = collection(db, "coupons");
         const q = query(couponsRef, where("userId", "==", user.uid));
         const querySnapshot = await getDocs(q);
@@ -36,12 +40,14 @@ function MyCoupons() {
       } finally {
         setLoading(false);
       }
+
     };
 
     fetchCoupons();
   }, []);
 
-  // Función para generar el PDF de un cupón
+
+  //Función que genera el PDF de un cupon
   const generatePDF = (coupon) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
@@ -59,12 +65,15 @@ function MyCoupons() {
     doc.save(`cupon_${coupon.couponCode}.pdf`);
   };
 
+
   if (loading)
     return <div className="container mx-auto p-4">Cargando cupones...</div>;
   if (error)
     return <div className="container mx-auto p-4 text-red-500">{error}</div>;
 
-  // Separar los cupones según su estado
+
+
+  //separa los cupones según su estado (disponible,canjeado,vencido):
   const availableCoupons = coupons.filter(
     (coupon) => coupon.status === "disponible"
   );
@@ -74,6 +83,7 @@ function MyCoupons() {
   const expiredCoupons = coupons.filter(
     (coupon) => coupon.status === "vencido"
   );
+
 
   return (
     <div className="container mx-auto p-4">
@@ -87,7 +97,9 @@ function MyCoupons() {
         </Link>
       </div>
 
+
       <h1 className="text-3xl font-bold mb-4">Mis Cupones</h1>
+
 
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-2">Cupones Disponibles</h2>
@@ -129,6 +141,8 @@ function MyCoupons() {
         )}
       </section>
 
+
+
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-2">Cupones Canjeados</h2>
         {redeemedCoupons.length === 0 ? (
@@ -158,6 +172,8 @@ function MyCoupons() {
           ))
         )}
       </section>
+
+
 
       <section>
         <h2 className="text-2xl font-semibold mb-2">Cupones Vencidos</h2>
@@ -191,5 +207,8 @@ function MyCoupons() {
     </div>
   );
 }
+
+
+
 
 export default MyCoupons;

@@ -1,3 +1,5 @@
+//Pagina para iniciar sesion
+
 import { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -9,7 +11,9 @@ function Login() {
     email: "",
     password: "",
   });
+
   const [error, setError] = useState(null);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,15 +23,19 @@ function Login() {
     e.preventDefault();
     setError(null);
 
+    
+
+    // si el inicio de sesion es correcto, lleva a la pagina de las ofertas, sino muestra error
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
-      // Si el inicio de sesión es exitoso, redirige a la página de ofertas
       navigate("/offers");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       setError(error.message);
     }
   };
+
+
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">

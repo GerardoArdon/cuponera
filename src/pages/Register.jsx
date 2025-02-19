@@ -1,3 +1,5 @@
+//pagina para registrarse
+
 import { useState } from "react";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -25,6 +27,8 @@ function Register() {
     e.preventDefault();
     setError(null);
 
+
+
     // Validaciones básicas (por ejemplo, contraseña de al menos 6 caracteres)
     if (!form.email || !form.password) {
       setError("El correo y la contraseña son obligatorios");
@@ -34,6 +38,8 @@ function Register() {
       setError("La contraseña debe tener al menos 6 caracteres");
       return;
     }
+
+
 
     try {
       const { email, password, firstName, lastName, phone, address, dui } = form;
@@ -46,7 +52,7 @@ function Register() {
         displayName: `${firstName} ${lastName}`,
       });
       
-      // Crear un documento en Firestore en la colección "users" usando el UID del usuario
+      //en firestore crea un documento en la colección "users" usando el UID del usuario
       await setDoc(doc(db, "users", userCredential.user.uid), {
         firstName,
         lastName,
@@ -56,7 +62,7 @@ function Register() {
         dui,
       });
       
-      // Después de registrar, redirige al usuario a la página de inicio para iniciar sesión
+      // Después de registrar, redirige al usuario de regreso a la página de inicio
       navigate("/");
     } catch (error) {
       console.error("Error en el registro:", error);
@@ -137,5 +143,6 @@ function Register() {
     </div>
   );
 }
+
 
 export default Register;
