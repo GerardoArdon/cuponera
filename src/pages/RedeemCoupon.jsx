@@ -20,9 +20,10 @@ function RedeemCoupon() {
       setError("Por favor, ingrese el código y el DUI.");
       return;
     }
+    
     setLoading(true);
     try {
-      // Buscamos el cupón en la colección "coupons" filtrando por couponCode
+      //Buscamos el cupón en la colección "coupons" de firbebase filtrando por codigo de cupon
       const couponsRef = collection(db, "coupons");
       const q = query(couponsRef, where("couponCode", "==", couponCode));
       const querySnapshot = await getDocs(q);
@@ -45,13 +46,17 @@ function RedeemCoupon() {
         setLoading(false);
         return;
       }
-      // Verificamos que el DUI almacenado en el cupón coincida con el ingresado
+
+
+      //Verificamos que el DUI almacenado en el cupón coincida con el ingresado
       if (coupon.buyerDUI !== buyerDUI) {
         setError("El DUI no coincide con el del comprador.");
         setLoading(false);
         return;
       }
-      // Actualizamos el estado del cupón a "canjeado"
+
+
+      //actualizamos el estado del cupón a "canjeado"
       const couponDocRef = doc(db, "coupons", coupon.id);
       await updateDoc(couponDocRef, { status: "canjeado" });
       setSuccess("Cupón canjeado exitosamente.");
@@ -63,6 +68,8 @@ function RedeemCoupon() {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="container mx-auto p-4">

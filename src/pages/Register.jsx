@@ -29,7 +29,7 @@ function Register() {
 
 
 
-    // Validaciones básicas (por ejemplo, contraseña de al menos 6 caracteres)
+    //validaciones básicas (por ejemplo, contraseña de al menos 6 caracteres)
     if (!form.email || !form.password) {
       setError("El correo y la contraseña son obligatorios");
       return;
@@ -44,10 +44,10 @@ function Register() {
     try {
       const { email, password, firstName, lastName, phone, address, dui } = form;
       
-      // Crear el usuario en Firebase Authentication
+      //Crear el usuario en Firebase authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       
-      // Actualizar el perfil, por ejemplo, el displayName
+      //actualizar el perfil, por ejemplo, el displayName
       await updateProfile(userCredential.user, {
         displayName: `${firstName} ${lastName}`,
       });
@@ -62,7 +62,7 @@ function Register() {
         dui,
       });
       
-      // Después de registrar, redirige al usuario de regreso a la página de inicio
+      //Despues de registrar, redirige al usuario de regreso a la página de inicio
       navigate("/");
     } catch (error) {
       console.error("Error en el registro:", error);

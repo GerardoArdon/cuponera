@@ -1,4 +1,7 @@
+//Pagina de inicio en donde se regstra e inicia sesion
+
 import { Link } from "react-router-dom";
+
 
 function Home() {
   return (

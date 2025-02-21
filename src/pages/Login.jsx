@@ -5,6 +5,7 @@ import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
+
 function Login() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -19,6 +20,7 @@ function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -31,7 +33,7 @@ function Login() {
       navigate("/offers");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      // Si el error es por credenciales incorrectas, mostramos un mensaje personalizado.
+      //si el error es por credenciales incorrectas, mostramos el mensaje personalizado
       if (
         error.code === "auth/wrong-password" ||
         error.code === "auth/user-not-found" ||
@@ -45,7 +47,7 @@ function Login() {
   };
 
 
-
+  //parte de iniciar sesion
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="bg-white p-6 rounded-lg shadow-md w-96">

@@ -47,7 +47,7 @@ function MyCoupons() {
   }, []);
 
 
-  //Función que genera el PDF de un cupon
+  //funcion que genera el PDF de un cupon
   const generatePDF = (coupon) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
@@ -87,7 +87,7 @@ function MyCoupons() {
 
   return (
     <div className="container mx-auto p-4">
-      {/* Botón de regresar a ofertas */}
+      {/* boton de regresar a ofertas*/}
       <div className="mb-4">
         <Link
           to="/offers"
