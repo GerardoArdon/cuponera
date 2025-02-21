@@ -20,6 +20,7 @@ function Offers() {
   const [buyerDUI, setBuyerDUI] = useState("");
   const [paymentLoading, setPaymentLoading] = useState(false);
 
+  //Obtener ofertas desde Firebase
   useEffect(() => {
     const fetchOffers = async () => {
       try {
@@ -43,6 +44,7 @@ function Offers() {
     fetchOffers();
   }, []);
 
+  //Manejo del modal de pago
   const handleShowPaymentModal = (offer) => {
     console.log("Oferta seleccionada para comprar:", offer);
     setSelectedOffer(offer);
@@ -59,6 +61,7 @@ function Offers() {
     setSelectedOffer(null);
   };
 
+  //Confirmacion del pago y generacion de cupones
   const handleConfirmPayment = async () => {
     if (!cardNumber || !cardExpiration || !cardCVV || !buyerDUI) {
       alert("Por favor, completa todos los datos de la tarjeta y el DUI.");
@@ -108,6 +111,7 @@ function Offers() {
     }, 2000);
   };
 
+  //Renderizado de la interfaz de usuario
   if (loading) {
     return <div className="container mx-auto p-4">Cargando ofertas...</div>;
   }
