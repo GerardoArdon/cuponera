@@ -1,7 +1,7 @@
-// src/pages/GestionRubros.jsx
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
+import { Link } from "react-router-dom"; 
 
 function GestionRubros() {
   const [rubros, setRubros] = useState([]);
@@ -9,7 +9,6 @@ function GestionRubros() {
   const [error, setError] = useState(null);
   const [newRubro, setNewRubro] = useState("");
 
-  // Función para obtener los rubros desde Firestore
   const fetchRubros = async () => {
     setLoading(true);
     try {
@@ -32,7 +31,6 @@ function GestionRubros() {
     fetchRubros();
   }, []);
 
-  // Manejo del formulario para agregar rubros
   const handleAddRubro = async (e) => {
     e.preventDefault();
     if (newRubro.trim() === "") return;
@@ -47,7 +45,6 @@ function GestionRubros() {
     }
   };
 
-  // Función para eliminar un rubro
   const handleDeleteRubro = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar este rubro?")) {
       try {
@@ -62,9 +59,18 @@ function GestionRubros() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+      {/* ✅ Botón de regreso */}
+      <div className="mb-4">
+        <Link
+          to="/admin/dashboard"
+          className="inline-block bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 transition"
+        >
+          ⬅︎ Volver al Dashboard
+        </Link>
+      </div>
+
       <h1 className="text-3xl font-bold mb-6">Gestión de Rubros</h1>
 
-      {/* Formulario para agregar un nuevo rubro */}
       <form onSubmit={handleAddRubro} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded shadow">
         <input
           type="text"
@@ -82,7 +88,6 @@ function GestionRubros() {
         </button>
       </form>
 
-      {/* Listado de Rubros */}
       {loading ? (
         <p>Cargando rubros...</p>
       ) : error ? (
@@ -127,4 +132,3 @@ function GestionRubros() {
 }
 
 export default GestionRubros;
-

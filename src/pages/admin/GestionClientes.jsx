@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
+import { Link } from "react-router-dom";
 
 function GestionClientes() {
   const [clientes, setClientes] = useState([]);
@@ -33,6 +34,16 @@ function GestionClientes() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
+      {/* ✅ Botón de regreso */}
+      <div className="mb-4">
+        <Link
+          to="/admin/dashboard"
+          className="inline-block bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 transition"
+        >
+          ⬅︎ Volver al Dashboard
+        </Link>
+      </div>
+
       <h1 className="text-3xl font-bold mb-6">Gestión de Clientes</h1>
       {clientes.length === 0 ? (
         <p>No hay clientes registrados.</p>
