@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 
 function RedeemCoupon() {
   const [couponCode, setCouponCode] = useState("");

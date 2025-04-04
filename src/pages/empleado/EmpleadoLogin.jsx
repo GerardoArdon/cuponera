@@ -1,8 +1,7 @@
-// src/pages/EmpleadoLogin.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDocs, collection, query, where } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 
 function EmpleadoLogin() {
   const navigate = useNavigate();

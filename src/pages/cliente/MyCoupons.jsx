@@ -1,7 +1,6 @@
-//pagina de Mis Cpones (los que tiene el usuario)
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { getAuth } from "firebase/auth";
 import { jsPDF } from "jspdf";
 import { Link } from "react-router-dom";

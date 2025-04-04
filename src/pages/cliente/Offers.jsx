@@ -1,7 +1,6 @@
-// src/pages/Offers.jsx
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { getAuth } from "firebase/auth";
 import { Link } from "react-router-dom";
 

@@ -1,7 +1,5 @@
-//pagina para registrarse
-
 import { useState } from "react";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";

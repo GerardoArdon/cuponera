@@ -2,14 +2,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Público / Cliente
-import Offers from "./pages/Offers";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import MyCoupons from "./pages/MyCoupons";
+import Offers from "./pages/cliente/Offers";
+import Register from "./pages/cliente/Register";
+import Login from "./pages/cliente/Login";
+import MyCoupons from "./pages/cliente/MyCoupons";
 
 //Empleado - Redimir cupones
-import EmpleadoLogin from "./pages/EmpleadoLogin";
-import RedeemCoupon from "./pages/RedeemCoupon";
+import EmpleadoLogin from "./pages/empleado/EmpleadoLogin";
+import RedeemCoupon from "./pages/empleado/RedeemCoupon";
 
 // Administrador de La Cuponera
 import AdminDashboard from "./pages/admin/AdminDashboard";
