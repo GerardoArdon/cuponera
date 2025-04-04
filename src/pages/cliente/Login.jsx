@@ -3,7 +3,6 @@ import { auth } from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-
 function Login() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -13,25 +12,19 @@ function Login() {
 
   const [error, setError] = useState(null);
 
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    
-
-    // si el inicio de sesion es correcto, lleva a la pagina de las ofertas, sino muestra error
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
-      navigate("/offers");
+      navigate("/"); 
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      //si el error es por credenciales incorrectas, mostramos el mensaje personalizado
       if (
         error.code === "auth/wrong-password" ||
         error.code === "auth/user-not-found" ||
@@ -44,8 +37,6 @@ function Login() {
     }
   };
 
-
-  //parte de iniciar sesion
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="bg-white p-6 rounded-lg shadow-md w-96">
@@ -81,3 +72,4 @@ function Login() {
 }
 
 export default Login;
+
