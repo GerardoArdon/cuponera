@@ -1,4 +1,3 @@
-// src/pages/empresa/GestionEmpleados.jsx
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -14,7 +13,7 @@ function GestionEmpleados() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const codigoEmpresa = "EMP001"; // Reemplazar por el código de la empresa logueada
+  const codigoEmpresa = "EMP001"; 
 
   useEffect(() => {
     const fetchEmpleados = async () => {

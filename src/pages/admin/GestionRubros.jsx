@@ -59,7 +59,6 @@ function GestionRubros() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      {/* ✅ Botón de regreso */}
       <div className="mb-4">
         <Link
           to="/admin/dashboard"

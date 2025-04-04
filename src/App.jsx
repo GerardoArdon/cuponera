@@ -1,7 +1,6 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Público / Cliente
+//Cliente
 import Offers from "./pages/cliente/Offers";
 import Register from "./pages/cliente/Register";
 import Login from "./pages/cliente/Login";
@@ -11,7 +10,7 @@ import MyCoupons from "./pages/cliente/MyCoupons";
 import EmpleadoLogin from "./pages/empleado/EmpleadoLogin";
 import RedeemCoupon from "./pages/empleado/RedeemCoupon";
 
-// Administrador de La Cuponera
+//Administrador de La Cuponera
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLogin from "./pages/admin/AdminLogin";
 import GestionEmpresas from "./pages/admin/GestionEmpresas";

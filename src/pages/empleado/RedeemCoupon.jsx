@@ -23,7 +23,6 @@ function RedeemCoupon() {
     
     setLoading(true);
     try {
-      //Buscamos el cupón en la colección "coupons" de firbebase filtrando por codigo de cupon
       const couponsRef = collection(db, "coupons");
       const q = query(couponsRef, where("couponCode", "==", couponCode));
       const querySnapshot = await getDocs(q);
@@ -48,7 +47,7 @@ function RedeemCoupon() {
       }
 
 
-      //Verificamos que el DUI almacenado en el cupón coincida con el ingresado
+      //aqui erifica que el DUI almacenado en el cupón coincida con el ingresado
       if (coupon.buyerDUI !== buyerDUI) {
         setError("El DUI no coincide con el del comprador.");
         setLoading(false);

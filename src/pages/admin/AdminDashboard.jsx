@@ -1,4 +1,3 @@
-// src/pages/admin/AdminDashboard.jsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
@@ -17,7 +16,6 @@ function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
       <header className="bg-blue-600 text-white p-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Administrador - La Cuponera</h1>
         <button
@@ -28,7 +26,6 @@ function AdminDashboard() {
         </button>
       </header>
 
-      {/* Contenido principal */}
       <main className="p-8 max-w-5xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6 text-gray-700">Panel de Administración</h2>
 

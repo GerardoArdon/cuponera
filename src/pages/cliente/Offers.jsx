@@ -135,7 +135,6 @@ function Offers() {
         )}
       </div>
 
-      {/* Filtro por rubro */}
       <div className="mb-6">
         <label className="block text-lg font-semibold mb-2">Filtrar por rubro:</label>
         <select
@@ -177,7 +176,7 @@ function Offers() {
         ))}
       </div>
 
-      {/* Modal de pago */}
+      {/* modal de pago */}
       {showPaymentModal && selectedOffer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

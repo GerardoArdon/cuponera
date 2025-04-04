@@ -26,8 +26,7 @@ function EmpleadoLogin() {
       const snapshot = await getDocs(q);
 
       if (!snapshot.empty) {
-        // Login exitoso
-        localStorage.setItem("empleadoCorreo", form.correo); // Puedes usarlo para mantener sesión
+        localStorage.setItem("empleadoCorreo", form.correo); 
         navigate("/redeem");
       } else {
         setError("Correo o contraseña incorrectos.");

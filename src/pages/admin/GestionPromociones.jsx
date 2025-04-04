@@ -37,7 +37,6 @@ function GestionPromociones() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      {/* ✅ Botón de regreso al Dashboard */}
       <div className="mb-4">
         <Link
           to="/admin/dashboard"
