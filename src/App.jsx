@@ -6,6 +6,9 @@ import Offers from "./pages/Offers";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import MyCoupons from "./pages/MyCoupons";
+
+//Empleado - Redimir cupones
+import EmpleadoLogin from "./pages/EmpleadoLogin";
 import RedeemCoupon from "./pages/RedeemCoupon";
 
 // Administrador de La Cuponera
@@ -16,10 +19,11 @@ import GestionPromociones from "./pages/admin/GestionPromociones";
 import GestionRubros from "./pages/admin/GestionRubros";
 import GestionClientes from "./pages/admin/GestionClientes";
 
-// Administrador de Empresa Ofertante
+//Empresa Ofertante
 import EmpresaDashboard from "./pages/empresa/EmpresaDashboard";
 import GestionOfertas from "./pages/empresa/GestionOfertas";
 import GestionEmpleados from "./pages/empresa/GestionEmpleados";
+import EmpresaLogin from "./pages/empresa/EmpresaLogin";
 
 function App() {
   return (
@@ -30,7 +34,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mycoupons" element={<MyCoupons />} />
+
+        {/* Empleado para redimir codigo */}
         <Route path="/redeem" element={<RedeemCoupon />} />
+        <Route path="/empleado/login" element={<EmpleadoLogin />} />
 
         {/* Admin de La Cuponera */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -44,6 +51,7 @@ function App() {
         <Route path="/empresa/dashboard" element={<EmpresaDashboard />} />
         <Route path="/empresa/ofertas" element={<GestionOfertas />} />
         <Route path="/empresa/empleados" element={<GestionEmpleados />} />
+        <Route path="/empresa/login" element={<EmpresaLogin />} />
       </Routes>
     </Router>
   );

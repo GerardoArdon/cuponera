@@ -10,6 +10,8 @@ function Offers() {
   const user = auth.currentUser;
 
   const [offers, setOffers] = useState([]);
+  const [rubros, setRubros] = useState([]);
+  const [selectedRubro, setSelectedRubro] = useState("Todos");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,40 +25,41 @@ function Offers() {
   const [paymentLoading, setPaymentLoading] = useState(false);
 
   useEffect(() => {
-    const fetchOffers = async () => {
+    const fetchData = async () => {
       try {
-        const promotionsRef = collection(db, "promotions");
-        const q = query(promotionsRef, where("estado", "==", "Oferta aprobada"));
+        const rubrosSnapshot = await getDocs(collection(db, "rubros"));
+        const rubrosList = rubrosSnapshot.docs.map((doc) => doc.data().nombre);
+        setRubros(["Todos", ...rubrosList]);
+
+        const q = query(collection(db, "promotions"), where("estado", "==", "Oferta aprobada"));
         const querySnapshot = await getDocs(q);
-        const promotions = [];
+        const promos = [];
         querySnapshot.forEach((doc) => {
-          promotions.push({ id: doc.id, ...doc.data() });
+          promos.push({ id: doc.id, ...doc.data() });
         });
-        setOffers(promotions);
+        setOffers(promos);
       } catch (error) {
-        console.error("Error al obtener las promociones:", error);
+        console.error("Error al obtener datos:", error);
         setError("Error al obtener las promociones");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOffers();
+    fetchData();
   }, []);
 
+  const filteredOffers =
+    selectedRubro === "Todos"
+      ? offers
+      : offers.filter((offer) => offer.rubro === selectedRubro);
+
   const handleShowPaymentModal = (offer) => {
-    const user = auth.currentUser;
-    if (!user) {
+    if (!auth.currentUser) {
       alert("Debes iniciar sesión o registrarte para comprar cupones.");
       return;
     }
-
     setSelectedOffer(offer);
-    setQuantity(1);
-    setCardNumber("");
-    setCardExpiration("");
-    setCardCVV("");
-    setBuyerDUI("");
     setShowPaymentModal(true);
   };
 
@@ -70,21 +73,11 @@ function Offers() {
       alert("Por favor, completa todos los datos de la tarjeta y el DUI.");
       return;
     }
-    if (quantity < 1) {
-      alert("Debes comprar al menos un cupón.");
-      return;
-    }
 
     setPaymentLoading(true);
+    const user = auth.currentUser;
 
     setTimeout(async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("Debes iniciar sesión para comprar cupones.");
-        setPaymentLoading(false);
-        setShowPaymentModal(false);
-        return;
-      }
       try {
         for (let i = 0; i < quantity; i++) {
           const codigoEmpresa = selectedOffer.codigoEmpresa || "DEF";
@@ -105,74 +98,79 @@ function Offers() {
         }
         alert(`Pago confirmado. Se ha enviado un correo de confirmación a ${user.email}.`);
       } catch (err) {
-        console.error("Error generando los cupones:", err);
-        alert("Error al procesar la compra. Inténtalo de nuevo.");
+        console.error("Error al generar los cupones:", err);
+        alert("Error al procesar la compra.");
       } finally {
         setPaymentLoading(false);
         setShowPaymentModal(false);
       }
-    }, 2000);
+    }, 1500);
   };
 
-  if (loading) return <div className="container mx-auto p-4">Cargando ofertas...</div>;
-  if (error) return <div className="container mx-auto p-4 text-red-500">{error}</div>;
+  if (loading) return <div className="p-6 text-center">Cargando ofertas...</div>;
+  if (error) return <div className="p-6 text-red-600 text-center">{error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      {/* Barra superior */}
+    <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <Link
-          to="/mycoupons"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-        >
+        <Link to="/mycoupons" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           Mis Cupones
         </Link>
 
-        {/* Sección de cuenta */}
         {user ? (
           <button
-            onClick={() => {
-              auth.signOut().then(() => window.location.reload());
-            }}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+            onClick={() => auth.signOut().then(() => window.location.reload())}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Cerrar sesión
           </button>
         ) : (
-          <div className="flex space-x-2">
-            <Link
-              to="/login"
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-            >
+          <div className="flex gap-2">
+            <Link to="/login" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
               Iniciar Sesión
             </Link>
-            <Link
-              to="/register"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-            >
+            <Link to="/register" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
               Registrarse
             </Link>
           </div>
         )}
       </div>
 
-      <h1 className="text-3xl font-bold mb-4">Ofertas Activas</h1>
+      {/* Filtro por rubro */}
+      <div className="mb-6">
+        <label className="block text-lg font-semibold mb-2">Filtrar por rubro:</label>
+        <select
+          value={selectedRubro}
+          onChange={(e) => setSelectedRubro(e.target.value)}
+          className="border p-2 rounded w-full max-w-sm"
+        >
+          {rubros.map((rubro, index) => (
+            <option key={index} value={rubro}>
+              {rubro}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {offers.map((offer) => (
-          <div key={offer.id} className="bg-white p-4 rounded shadow">
-            <h2 className="text-xl font-semibold">{offer.titulo}</h2>
-            <p className="text-gray-600"><strong>Rubro:</strong> {offer.rubro}</p>
-            <p><strong>Precio regular:</strong> ${offer.precioRegular}</p>
-            <p><strong>Precio oferta:</strong> ${offer.precioOferta}</p>
-            <p><strong>Fecha Inicio:</strong> {offer.fechaInicio}</p>
-            <p><strong>Fecha Fin:</strong> {offer.fechaFin}</p>
+      {/* Ofertas */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredOffers.map((offer) => (
+          <div
+            key={offer.id}
+            className="bg-white border-2 border-dashed border-gray-300 rounded-lg p-6 shadow-md relative"
+          >
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-t-lg"></div>
+            <h2 className="text-xl font-bold text-gray-800">{offer.titulo}</h2>
+            <p className="text-sm text-gray-600 mb-2"><strong>Rubro:</strong> {offer.rubro}</p>
+            <p><strong>Precio Regular:</strong> ${offer.precioRegular}</p>
+            <p><strong>Precio Oferta:</strong> ${offer.precioOferta}</p>
+            <p><strong>Vigencia:</strong> {offer.fechaInicio} - {offer.fechaFin}</p>
             <p><strong>Fecha límite:</strong> {offer.fechaLimite}</p>
-            <p><strong>Descripción:</strong> {offer.descripcion}</p>
+            <p className="mt-2"><strong>Descripción:</strong> {offer.descripcion}</p>
 
             <button
               onClick={() => handleShowPaymentModal(offer)}
-              className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              className="mt-4 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
             >
               Comprar
             </button>
@@ -183,68 +181,60 @@ function Offers() {
       {/* Modal de pago */}
       {showPaymentModal && selectedOffer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-2xl font-bold mb-4">Confirmar Compra</h2>
             <p><strong>Oferta:</strong> {selectedOffer.titulo}</p>
 
-            <div className="mb-2">
-              <label className="block mb-1">Cantidad de cupones:</label>
+            <div className="grid gap-2 mt-4">
               <input
                 type="number"
                 value={quantity}
                 min="1"
                 onChange={(e) => setQuantity(Number(e.target.value))}
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded"
+                placeholder="Cantidad de cupones"
               />
-            </div>
-            <div className="mb-2">
-              <label className="block mb-1">Número de tarjeta:</label>
               <input
                 type="text"
                 value={cardNumber}
                 onChange={(e) => setCardNumber(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded"
+                placeholder="Número de tarjeta"
               />
-            </div>
-            <div className="mb-2">
-              <label className="block mb-1">Fecha de expiración:</label>
               <input
                 type="text"
                 value={cardExpiration}
                 onChange={(e) => setCardExpiration(e.target.value)}
-                placeholder="MM/AA"
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded"
+                placeholder="Fecha expiración (MM/AA)"
               />
-            </div>
-            <div className="mb-2">
-              <label className="block mb-1">CVV:</label>
               <input
                 type="text"
                 value={cardCVV}
                 onChange={(e) => setCardCVV(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded"
+                placeholder="CVV"
               />
-            </div>
-            <div className="mb-2">
-              <label className="block mb-1">DUI:</label>
               <input
                 type="text"
                 value={buyerDUI}
                 onChange={(e) => setBuyerDUI(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded"
+                placeholder="DUI"
               />
             </div>
-            <div className="flex justify-end mt-4 space-x-2">
+
+            <div className="flex justify-end mt-4 gap-2">
               <button
                 onClick={handleCancelPayment}
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                 disabled={paymentLoading}
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConfirmPayment}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 disabled={paymentLoading}
               >
                 {paymentLoading ? "Procesando..." : "Confirmar Pago"}
@@ -258,3 +248,4 @@ function Offers() {
 }
 
 export default Offers;
+

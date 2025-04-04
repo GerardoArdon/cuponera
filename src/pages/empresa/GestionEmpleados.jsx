@@ -1,14 +1,20 @@
+// src/pages/empresa/GestionEmpleados.jsx
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 function GestionEmpleados() {
   const [empleados, setEmpleados] = useState([]);
-  const [form, setForm] = useState({ nombres: "", apellidos: "", correo: "" });
+  const [form, setForm] = useState({
+    nombres: "",
+    apellidos: "",
+    correo: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const codigoEmpresa = "EMP001"; // TODO: reemplazar por empresa logueada
+  const codigoEmpresa = "EMP001"; // Reemplazar por el código de la empresa logueada
 
   useEffect(() => {
     const fetchEmpleados = async () => {
@@ -40,17 +46,23 @@ function GestionEmpleados() {
 
   const handleAddEmpleado = async (e) => {
     e.preventDefault();
-    if (!form.nombres || !form.apellidos || !form.correo) {
-      alert("Completa todos los campos");
+    const { nombres, apellidos, correo, password } = form;
+
+    if (!nombres || !apellidos || !correo || !password) {
+      alert("Completa todos los campos.");
       return;
     }
+
     try {
-      await addDoc(collection(db, "empleados"), { ...form, codigoEmpresa });
-      alert("Empleado registrado exitosamente");
+      await addDoc(collection(db, "empleados"), {
+        ...form,
+        codigoEmpresa,
+      });
+      alert("Empleado registrado exitosamente.");
       window.location.reload();
     } catch (err) {
       console.error("Error al registrar empleado:", err);
-      alert("Error al registrar empleado");
+      alert("Error al registrar empleado.");
     }
   };
 
@@ -68,8 +80,11 @@ function GestionEmpleados() {
       <form onSubmit={handleAddEmpleado} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded shadow">
         <input name="nombres" value={form.nombres} onChange={handleChange} className="border p-2 rounded" placeholder="Nombres" required />
         <input name="apellidos" value={form.apellidos} onChange={handleChange} className="border p-2 rounded" placeholder="Apellidos" required />
-        <input name="correo" type="email" value={form.correo} onChange={handleChange} className="border p-2 rounded col-span-full" placeholder="Correo Electrónico" required />
-        <button type="submit" className="col-span-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Registrar Empleado</button>
+        <input name="correo" type="email" value={form.correo} onChange={handleChange} className="border p-2 rounded" placeholder="Correo Electrónico" required />
+        <input name="password" type="password" value={form.password} onChange={handleChange} className="border p-2 rounded" placeholder="Contraseña" required />
+        <button type="submit" className="col-span-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+          Registrar Empleado
+        </button>
       </form>
 
       {loading ? (
